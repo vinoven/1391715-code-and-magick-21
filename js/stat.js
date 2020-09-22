@@ -16,7 +16,7 @@ const CLOUD_PADDING_BOTTOM = 10;
 const BAR_HEIGHT = 150;
 const BAR_WIDTH = 40;
 const GAP = 50;
-
+let barColor = '#000000';
 
 const renderCloud = (ctx, x, y, color) => {
   ctx.fillStyle = color;
@@ -34,22 +34,43 @@ const getMaxElement = (array) => {
   return maxElement;
 };
 
-window.renderStatistics = (ctx, players, times) => {
+const renderHeaderText = (ctx, fontSize, fontFamily, textColor, firstLine, secondLine) => {
+  ctx.fillStyle = textColor;
+  ctx.font = fontSize + ' ' + fontFamily;
+  ctx.fillText(firstLine, CLOUD_X + GAP, CLOUD_Y + CLOUD_PADDING_TOP);
+  ctx.fillText(secondLine, CLOUD_X + GAP, CLOUD_Y + CLOUD_PADDING_TOP + FONT_HEIGHT);
+};
 
-  renderCloud(ctx, CLOUD_X + CLOUD_SHADOW_GAP, CLOUD_Y + CLOUD_SHADOW_GAP, SHADOW_COLOR);
-  renderCloud(ctx, CLOUD_X, CLOUD_Y, BASIC_WHITE);
+const getBarColor = (name) => {
+  if (name === 'Вы') {
+    return ACCENT_COLOR;
+  } else {
+    return 'hsl(240, ' + getRandomSaturation() + '%, 50%)';
+  }
+};
 
-  ctx.fillStyle = BASIC_BLACK;
-  ctx.font = "16px PT Mono";
-  ctx.fillText('Ура вы победили!', CLOUD_X + GAP, CLOUD_Y + CLOUD_PADDING_TOP);
-  ctx.fillText('Список результатов:', CLOUD_X + GAP, CLOUD_Y + CLOUD_PADDING_TOP + FONT_HEIGHT);
+const getRandomSaturation = () => {
+  return Math.ceil(Math.random() * (100 - 1) + 1);
+};
+
+const renderChart = (ctx, players, times) => {
 
   let maxTime = getMaxElement(times);
 
-
   for (let i = 0; i < players.length; i++) {
+    ctx.fillStyle = BASIC_BLACK;
     ctx.fillText(Math.ceil(times[i]), CLOUD_X + GAP + (BAR_WIDTH + GAP) * i, CLOUD_HEIGHT - (TIME_GAP + (BAR_HEIGHT * times[i] / maxTime) + FONT_HEIGHT + CLOUD_PADDING_BOTTOM));
     ctx.fillText(players[i], CLOUD_X + GAP + (BAR_WIDTH + GAP) * i, CLOUD_HEIGHT - CLOUD_PADDING_BOTTOM);
+
+    barColor = getBarColor(players[i]);
+    ctx.fillStyle = barColor;
     ctx.fillRect(CLOUD_X + GAP + (BAR_WIDTH + GAP) * i, CLOUD_HEIGHT - (FONT_HEIGHT + CLOUD_PADDING_BOTTOM), BAR_WIDTH, -(BAR_HEIGHT * times[i] / maxTime));
   }
+};
+
+window.renderStatistics = (ctx, players, times) => {
+  renderCloud(ctx, CLOUD_X + CLOUD_SHADOW_GAP, CLOUD_Y + CLOUD_SHADOW_GAP, SHADOW_COLOR);
+  renderCloud(ctx, CLOUD_X, CLOUD_Y, BASIC_WHITE);
+  renderHeaderText(ctx, '16px', 'PT Mono', BASIC_BLACK, 'Ура вы победили!', 'Список результатов:');
+  renderChart(ctx, players, times);
 };
