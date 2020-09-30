@@ -12,7 +12,9 @@ const COAT_COLORS = [
   'rgb(0, 0, 0)'
 ];
 const EYES_COLORS = ['black', 'red', 'blue', 'yellow', 'green'];
+const WIZARDS_QUANTITY = 4;
 
+const wizardsListElement = document.querySelector('.setup-similar-list');
 const userDialog = document.querySelector('.setup');
 userDialog.classList.remove('hidden');
 
@@ -23,17 +25,43 @@ const getRandom = (items) => {
   return item;
 };
 
-//  Генерация вида волшебников
+//  Генерация волшебников
 
-const similarWizard = (firstNames, secondNames, coatColors, eyesColors) => {
-  let wizard = {
-    name: getRandom(firstNames) + ' ' + getRandom(secondNames),
-    coatColor: getRandom(coatColors),
-    eyesColor: getRandom(eyesColors)
-  };
-  return wizard;
+const generateWizards = (firstNames, secondNames, coatColors, eyesColors) => {
+  let wizardsList = [];
+  for (let i = 0; i < WIZARDS_QUANTITY; i++) {
+    let wizard = {
+      name: getRandom(firstNames) + ' ' + getRandom(secondNames),
+      coatColor: getRandom(coatColors),
+      eyesColor: getRandom(eyesColors)
+    };
+    wizardsList.push(wizard);
+  }
+  return wizardsList;
 };
 
-for (var i = 0; i < 4; i++) {
-  similarWizard(FIRST_NAMES, SECOND_NAMES, COAT_COLORS, EYES_COLORS);
+const wizards = generateWizards(FIRST_NAMES, SECOND_NAMES, COAT_COLORS, EYES_COLORS);
+
+// Создание копий волшебников с определенными ранее свойствами
+
+const wizardTemplate = document.querySelector('#similar-wizard-template').content.querySelector('.setup-similar-item');
+
+const renderWizards = (wizard) => {
+  const wizardElement = wizardTemplate.cloneNode(true);
+  wizardElement.querySelector('.setup-similar-label').textContent = wizard.name;
+  wizardElement.querySelector('.wizard-coat').style.fill = wizard.coatColor;
+  wizardElement.querySelector('.wizard-eyes').style.fill = wizard.eyesColor;
+  return wizardElement;
+};
+
+//  Добавление копий волшебников в documentFragment
+
+const fragment = document.createDocumentFragment();
+for (let i = 0; i < WIZARDS_QUANTITY; i++) {
+  fragment.appendChild(renderWizards(wizards[i]));
 }
+
+//  Отрисовка documentFragment в окне браузера
+wizardsListElement.appendChild(fragment);
+
+document.querySelector('.setup-similar').classList.remove('hidden');
