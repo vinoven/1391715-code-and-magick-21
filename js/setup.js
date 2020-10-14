@@ -16,7 +16,7 @@ const WIZARDS_QUANTITY = 4;
 
 const wizardsListElement = document.querySelector('.setup-similar-list');
 const userDialog = document.querySelector('.setup');
-userDialog.classList.remove('hidden');
+// userDialog.classList.remove('hidden');
 
 //  Рандомайзер
 
@@ -68,3 +68,62 @@ const createWizardsFragment = (generatedWizards) => {
 wizardsListElement.appendChild(createWizardsFragment(wizards));
 
 document.querySelector('.setup-similar').classList.remove('hidden');
+
+// Находим элементы для открытия и закрытия попапа
+
+const setupOpenButton = document.querySelector('.setup-open');
+const setupCloseButton = document.querySelector('.setup-close');
+const setupOpenIcon = document.querySelector(`.setup-open-icon`);
+const setupUserName = document.querySelector('.setup-user-name');
+
+// Функция показа попапа
+
+const openPopup = () => {
+  userDialog.classList.remove('hidden');
+
+  setupCloseButton.addEventListener('click', function () {
+    closePopup();
+  });
+  document.addEventListener('keydown', onPopupEscapePress);
+  setupCloseButton.addEventListener('keydown', onCloseButtonEnterPress);
+};
+
+// Функция скрытия попапа
+
+const closePopup = () => {
+  userDialog.classList.add('hidden');
+
+  setupCloseButton.removeEventListener('click', function () {
+    closePopup();
+  });
+  document.removeEventListener('keydown', onPopupEscapePress);
+  setupCloseButton.removeEventListener('keydown', onCloseButtonEnterPress);
+};
+
+// Вспомогательные функции для обработчиков (Альтернативный ввод)
+
+const onSetupIconEnterPress = (evt) => {
+  if (evt.key === 'Enter') {
+    openPopup();
+  }
+};
+
+const onPopupEscapePress = (evt) => {
+  if (evt.target !== setupUserName && evt.key === 'Escape') {
+    closePopup();
+  }
+};
+
+const onCloseButtonEnterPress = (evt) => {
+  if (evt.key === 'Enter') {
+    closePopup();
+  }
+};
+
+// Обработчики, необходимые для показа попапа при первичной загрузке страницы
+
+setupOpenButton.addEventListener('click', function () {
+  openPopup();
+});
+
+setupOpenIcon.addEventListener('keydown', onSetupIconEnterPress);
