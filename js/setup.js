@@ -20,7 +20,7 @@ userDialog.classList.remove('hidden');
 
 //  Рандомайзер
 
-const getRandom = (items) => {
+const getRandomItemFromArray = (items) => {
   const item = items[Math.floor(Math.random() * items.length)];
   return item;
 };
@@ -31,9 +31,9 @@ const generateWizards = (firstNames, secondNames, coatColors, eyesColors) => {
   let wizardsList = [];
   for (let i = 0; i < WIZARDS_QUANTITY; i++) {
     let wizard = {
-      name: getRandom(firstNames) + ' ' + getRandom(secondNames),
-      coatColor: getRandom(coatColors),
-      eyesColor: getRandom(eyesColors)
+      name: getRandomItemFromArray(firstNames) + ' ' + getRandomItemFromArray(secondNames),
+      coatColor: getRandomItemFromArray(coatColors),
+      eyesColor: getRandomItemFromArray(eyesColors)
     };
     wizardsList.push(wizard);
   }
@@ -46,7 +46,7 @@ const wizards = generateWizards(FIRST_NAMES, SECOND_NAMES, COAT_COLORS, EYES_COL
 
 const wizardTemplate = document.querySelector('#similar-wizard-template').content.querySelector('.setup-similar-item');
 
-const renderWizards = (wizard) => {
+const createWizardElement = (wizard) => {
   const wizardElement = wizardTemplate.cloneNode(true);
   wizardElement.querySelector('.setup-similar-label').textContent = wizard.name;
   wizardElement.querySelector('.wizard-coat').style.fill = wizard.coatColor;
@@ -56,12 +56,15 @@ const renderWizards = (wizard) => {
 
 //  Добавление копий волшебников в documentFragment
 
-const fragment = document.createDocumentFragment();
-for (let i = 0; i < WIZARDS_QUANTITY; i++) {
-  fragment.appendChild(renderWizards(wizards[i]));
-}
+const createWizardsFragment = (generatedWizards) => {
+  const fragment = document.createDocumentFragment();
+  for (let i = 0; i < generatedWizards.length; i++) {
+    fragment.appendChild(createWizardElement(generatedWizards[i]));
+  }
+  return fragment;
+};
 
 //  Отрисовка documentFragment в окне браузера
-wizardsListElement.appendChild(fragment);
+wizardsListElement.appendChild(createWizardsFragment(wizards));
 
 document.querySelector('.setup-similar').classList.remove('hidden');
