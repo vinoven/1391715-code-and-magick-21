@@ -12,6 +12,13 @@ const COAT_COLORS = [
   'rgb(0, 0, 0)'
 ];
 const EYES_COLORS = ['black', 'red', 'blue', 'yellow', 'green'];
+const FIREBALL_COLORS = [
+  '#ee4830',
+  '#30a8ee',
+  '#5ce6c0',
+  '#e848d5',
+  '#e6e848'
+];
 const WIZARDS_QUANTITY = 4;
 
 const wizardsListElement = document.querySelector('.setup-similar-list');
@@ -86,6 +93,15 @@ const openPopup = () => {
   });
   document.addEventListener('keydown', onPopupEscapePress);
   setupCloseButton.addEventListener('keydown', onCloseButtonEnterPress);
+  setupWizardCoat.addEventListener('click', function () {
+    setUpPlayerAppearance(setupWizardCoat, setupWizardCoatInput, COAT_COLORS);
+  });
+  setupWizardEyes.addEventListener('click', function () {
+    setUpPlayerAppearance(setupWizardEyes, setupWizardEyesInput, EYES_COLORS);
+  });
+  setupFireball.addEventListener('click', function () {
+    setUpFireballAppearance(setupFireball, setupFireballInput, FIREBALL_COLORS);
+  });
 };
 
 // Функция скрытия попапа
@@ -98,6 +114,15 @@ const closePopup = () => {
   });
   document.removeEventListener('keydown', onPopupEscapePress);
   setupCloseButton.removeEventListener('keydown', onCloseButtonEnterPress);
+  setupWizardCoat.removeEventListener('click', function () {
+    setUpPlayerAppearance(setupWizardCoat, setupWizardCoatInput, COAT_COLORS);
+  });
+  setupWizardEyes.removeEventListener('click', function () {
+    setUpPlayerAppearance(setupWizardEyes, setupWizardEyesInput, EYES_COLORS);
+  });
+  setupFireball.removeEventListener('click', function () {
+    setUpFireballAppearance(setupFireball, setupFireballInput, FIREBALL_COLORS);
+  });
 };
 
 // Вспомогательные функции для обработчиков (Альтернативный ввод)
@@ -127,3 +152,27 @@ setupOpenButton.addEventListener('click', function () {
 });
 
 setupOpenIcon.addEventListener('keydown', onSetupIconEnterPress);
+
+// Находим элементы персонажа
+
+const setupPlayer = document.querySelector('.setup-player');
+const setupWizardCoat = setupPlayer.querySelector('.wizard-coat');
+const setupWizardEyes = setupPlayer.querySelector('.wizard-eyes');
+const setupFireball = setupPlayer.querySelector('.setup-fireball-wrap');
+const setupWizardCoatInput = setupPlayer.querySelector('input[name="coat-color"]');
+const setupWizardEyesInput = setupPlayer.querySelector('input[name="eyes-color"]');
+const setupFireballInput = setupPlayer.querySelector('input[name="fireball-color"]');
+
+// Вспомогательные функции по заданию внешнего вида игрока
+
+const setUpPlayerAppearance = (element, input, colors) => {
+  const generatedColor = getRandomItemFromArray(colors);
+  element.style.fill = generatedColor;
+  input.value = generatedColor;
+};
+
+const setUpFireballAppearance = (element, input, colors) => {
+  const generatedColor = getRandomItemFromArray(colors);
+  element.style.backgroundColor = generatedColor;
+  input.value = generatedColor;
+};
